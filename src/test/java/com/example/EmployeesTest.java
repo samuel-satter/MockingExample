@@ -1,15 +1,17 @@
 package com.example;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.mockito.verification.VerificationMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class EmployeesTest {
 
@@ -49,7 +51,19 @@ public class EmployeesTest {
     }
     @Test
     void shouldIncreaseAmountOfPayedEmployees() {
-        
+        EmployeeRepository employeeRepository1 = mock(EmployeeRepository.class);
+        BankService bankService1 = mock(BankService.class);
+
+        List<Employee> employeeList = new ArrayList<>();
+        employeeList.add(new Employee("1", 5000));
+        employeeList.add(new Employee("2", 5000));
+        employeeList.add(new Employee("3", 5000));
+
+        when(employeeRepository1.findAll()).thenReturn(employeeList);
+
+        Employees employees = new Employees(employeeRepository1, bankService1);
+        assertEquals(3, employees.payEmployees());
+        verify(bankService1, times(3)).pay(anyString(), anyDouble());
     }
     @Test
     void shouldThrowRuntimeExceptionWhenSetPaidMethodEqualsFalse() {
@@ -61,6 +75,22 @@ public class EmployeesTest {
             System.out.println("Exception caught");
             assertTrue(e instanceof RuntimeException);
         }
+    }
+    @Test
+    void shouldThrowRuntimeExceptionWhenBankServiceIsNull(){
+        EmployeeRepository employeeRepository1 = mock(EmployeeRepository.class);
+
+        List<Employee> employeeList = new ArrayList<>();
+        employeeList.add(new Employee("1", 5000));
+        employeeList.add(new Employee("2", 5000));
+        employeeList.add(new Employee("3", 5000));
+
+        when(employeeRepository1.findAll()).thenReturn(employeeList);
+        Employees employees = new Employees(employeeRepository1, null);
+        employees.payEmployees();
+        employeeList.forEach(employee -> {
+            assertEquals(employee.isPaid(), false);
+        });
     }
 }
 
