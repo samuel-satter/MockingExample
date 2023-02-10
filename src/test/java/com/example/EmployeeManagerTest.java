@@ -8,7 +8,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class EmployeesTest {
+public class EmployeeManagerTest {
 
     @Test
     void shouldIncreaseAmountOfPayedEmployees() {
@@ -22,14 +22,14 @@ public class EmployeesTest {
 
         when(employeeRepository1.findAll()).thenReturn(employeeList);
 
-        Employees employees = new Employees(employeeRepository1, bankService1);
+        EmployeeManager employees = new EmployeeManager(employeeRepository1, bankService1);
         assertEquals(3, employees.payEmployees());
         verify(bankService1, times(3)).pay(anyString(), anyDouble());
     }
     @Test
     void shouldThrowRuntimeExceptionWhenSetPaidMethodEqualsFalse() {
         try {
-            Employees employees = mock(Employees.class);
+            EmployeeManager employees = mock(EmployeeManager.class);
             when(employees.payEmployees())
                     .thenThrow(RuntimeException.class);
         } catch (Exception e) {
@@ -47,7 +47,7 @@ public class EmployeesTest {
         employeeList.add(new Employee("3", 5000));
 
         when(employeeRepository1.findAll()).thenReturn(employeeList);
-        Employees employees = new Employees(employeeRepository1, null);
+        EmployeeManager employees = new EmployeeManager(employeeRepository1, null);
         employees.payEmployees();
         employeeList.forEach(employee -> {
             assertFalse(employee.isPaid());

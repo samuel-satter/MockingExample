@@ -30,4 +30,11 @@ public class EmployeeRepositoryImplementationTest {
         employeeRepository.save(employee4);
         assertEquals(4, employeeRepository.findAll().size());
     }
+    @Test
+    void shouldOverwriteEmployee(){
+        Employee employee = new Employee("1", 5000);
+        employeeRepository.save(employee);
+        employeeRepository.save(new Employee("1", 2000));
+        assertEquals(1, employeeRepository.findAll().size());
+    }
 }
