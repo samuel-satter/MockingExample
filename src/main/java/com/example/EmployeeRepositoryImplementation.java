@@ -12,6 +12,11 @@ public class EmployeeRepositoryImplementation implements EmployeeRepository{
         this.employeeList = new ArrayList<>();
     }
 
+    public EmployeeRepositoryImplementation(List<Employee> employees){
+        this.employeeList = new ArrayList<>();
+        employees.forEach(employee -> this.employeeList.add(Integer.parseInt(employee.getId()), employee));
+    }
+
     @Override
     public List<Employee> findAll() {
         return employeeList.stream().toList();

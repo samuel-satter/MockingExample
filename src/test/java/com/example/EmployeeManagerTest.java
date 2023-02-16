@@ -49,9 +49,7 @@ public class EmployeeManagerTest {
         when(employeeRepository1.findAll()).thenReturn(employeeList);
         EmployeeManager employees = new EmployeeManager(employeeRepository1, null);
         employees.payEmployees();
-        employeeList.forEach(employee -> {
-            assertFalse(employee.isPaid());
-        });
+        employeeList.forEach(employee -> assertFalse(employee.isPaid()));
     }
 }
 
